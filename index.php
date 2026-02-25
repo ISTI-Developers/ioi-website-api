@@ -13,11 +13,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 require __DIR__ . '/controller/teamcontroller.php';
 require __DIR__ . '/controller/rolescontroller.php';
+require __DIR__ . '/controller/clientcontroller.php';
 
 
 $routes = [
     "team" => new TeamController(),
     "roles" => new RolesController(),
+    "clients" => new ClientController(),
 
 ];
 
