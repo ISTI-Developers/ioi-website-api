@@ -1,4 +1,7 @@
 <?php
+
+//
+
 $target_dir = "uploads/";
 $test_file = $target_dir . "test.txt";
 
@@ -20,3 +23,4 @@ if (is_writable($target_dir)) {
     echo "❌ ERROR: The folder is NOT writable. Check permissions.";
 }
 ?>
+
