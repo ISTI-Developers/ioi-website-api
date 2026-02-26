@@ -1,5 +1,8 @@
 <?php
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
@@ -15,14 +18,15 @@ require __DIR__ . '/controller/teamcontroller.php';
 require __DIR__ . '/controller/rolescontroller.php';
 require __DIR__ . '/controller/clientcontroller.php';
 require __DIR__ . '/controller/projectcontroller.php';
+require __DIR__ . '/controller/careercontroller.php';
 
-//
 $routes = [
     "team" => new TeamController(),
     "roles" => new RolesController(),
     "clients" => new ClientController(),
     "projects" => new ProjectController(),
 
+    "careers" => new CareerController(),
 ];
 
 $resource = $_GET['resource'] ?? null;
@@ -35,7 +39,6 @@ if(!$resource || !isset($routes[$resource])) {
 
 $controller = $routes[$resource];
 
-
 switch ($_SERVER['REQUEST_METHOD']) {
     case "GET":
         if(isset($_GET['id'])) {
@@ -43,14 +46,13 @@ switch ($_SERVER['REQUEST_METHOD']) {
         } else {
             $controller->get();
         }
-
         break;
-      case "POST":
+
+    case "POST":
         if (!isset($_REQUEST['data'])) {
             $controller->send(["message" => "Data not found."], 404);
         }
         $data = json_decode($_REQUEST['data'], associative: true);
-
 
         if (isset($_FILES)) {
             $files = $_FILES['file'] ?? null;
@@ -66,28 +68,28 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     if ($files['error'][$index] === UPLOAD_ERR_OK) {
                         $fileName = time() . '_' . basename($name);
                         $filePath = "uploads/" . $fileName;
-                        move_uploaded_file($files['tmp_name'][$index], $filePath);
+                        move_uploaded_file($files['tmp_name'][$index], __DIR__ . "/uploads/" . $fileName);
                         $filenames[] = $filePath;
                     }
                 }
                 $data["file"] = $filenames;
             }
         }
-        if (isset($_REQUEST['type'])) {
-            switch ($_REQUEST['type']) {
-                case "batch":
-                    $controller->addMultiple($data);
-                    break;
-                case "images":
-                    $controller->addImages($data);
 
-            }
-        }
         $response = $controller->add($data);
         if ($response)
             $controller->send([
-                "message" => "Insurance added successfully.",
+                "message" => "Added successfully.",
                 "id" => $response
             ]);
+        break;
+
+    case "PUT":
+        $data = json_decode(file_get_contents("php://input"), true);
+        $controller->update($data);
+        break;
+
+    case "DELETE":
+        $controller->delete();
         break;
 }

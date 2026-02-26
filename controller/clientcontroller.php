@@ -3,7 +3,6 @@
 
 require_once 'controller.php';
 
-//
 
 class ClientController extends Controller {
 
@@ -26,7 +25,7 @@ class ClientController extends Controller {
     {
         $data = $this->getRecords(
             "ioi_clients",
-            ["role_id"],
+            ["client_id"],
             [$id],
             "one"
         );
