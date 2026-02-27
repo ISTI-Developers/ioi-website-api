@@ -19,14 +19,15 @@ require __DIR__ . '/controller/rolescontroller.php';
 require __DIR__ . '/controller/clientcontroller.php';
 require __DIR__ . '/controller/projectcontroller.php';
 require __DIR__ . '/controller/careercontroller.php';
+require __DIR__ . '/controller/bannercontroller.php';
 
 $routes = [
     "team" => new TeamController(),
     "roles" => new RolesController(),
     "clients" => new ClientController(),
     "projects" => new ProjectController(),
-
     "careers" => new CareerController(),
+    "banners" => new BannerController(),
 ];
 
 $resource = $_GET['resource'] ?? null;
@@ -87,9 +88,5 @@ switch ($_SERVER['REQUEST_METHOD']) {
     case "PUT":
         $data = json_decode(file_get_contents("php://input"), true);
         $controller->update($data);
-        break;
-
-    case "DELETE":
-        $controller->delete();
         break;
 }
