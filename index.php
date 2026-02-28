@@ -18,6 +18,8 @@ require __DIR__ . '/controller/teamcontroller.php';
 require __DIR__ . '/controller/rolescontroller.php';
 require __DIR__ . '/controller/clientcontroller.php';
 require __DIR__ . '/controller/projectcontroller.php';
+require __DIR__ . '/controller/projectpointscontroller.php';
+
 require __DIR__ . '/controller/careercontroller.php';
 require __DIR__ . '/controller/bannercontroller.php';
 
@@ -25,7 +27,10 @@ $routes = [
     "team" => new TeamController(),
     "roles" => new RolesController(),
     "clients" => new ClientController(),
+
     "projects" => new ProjectController(),
+    "points" => new ProjectPointsController(),
+
     "careers" => new CareerController(),
     "banners" => new BannerController(),
 ];

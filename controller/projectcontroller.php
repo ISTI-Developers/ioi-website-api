@@ -20,19 +20,19 @@ class ProjectController extends Controller {
 
 
    public function getOne($id)
-{
-    $project = $this->getRecords("ioi_projects", ["project_id"], [$id], "one");
-    if (!$project) {
-        $this->send(["error" => "Project not found"], 404);
-        return;
-    }
+    {
+        $project = $this->getRecords("ioi_projects", ["project_id"], [$id], "one");
+        if (!$project) {
+            $this->send(["error" => "Project not found"], 404);
+            return;
+        }
 
-    $points = $this->getRecords("ioi_projects_points", ["project_id"], [$id], "many");
+        $points = $this->getRecords("ioi_projects_points", ["project_id"], [$id], "many");
 
-    $project->points = $points;
+        $project->points = $points;
 
-    $this->send($project);
-}   
+        $this->send($project);
+    }   
 
 
     public function add()
