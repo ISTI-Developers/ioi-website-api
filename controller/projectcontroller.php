@@ -19,17 +19,20 @@ class ProjectController extends Controller {
     }
 
 
-    public function getOne()
-    {
-        $data = $this->getRecords(
-            "ioi_projects",
-            ["project_id"],
-            [$id],
-            "one"
-        );
-
-        $this->send($data);
+   public function getOne($id)
+{
+    $project = $this->getRecords("ioi_projects", ["project_id"], [$id], "one");
+    if (!$project) {
+        $this->send(["error" => "Project not found"], 404);
+        return;
     }
+
+    $points = $this->getRecords("ioi_projects_points", ["project_id"], [$id], "many");
+
+    $project->points = $points;
+
+    $this->send($project);
+}   
 
 
     public function add()
@@ -51,7 +54,7 @@ class ProjectController extends Controller {
         }
 
 
-        $project_id = $this->addProjects(
+        $project_id = $this->addRecords (
             "ioi_projects",
             ["project_name", "project_type", "start_date", "end_date", "project_category", "company_description", "brand_positioning", "file"],
             [
