@@ -41,50 +41,58 @@ class TeamController extends Controller
         $this->send($data);
     }
 
-   
-    public function add()
-    {
-        $data = json_decode($_POST['data'], true);
-        extract($data);
+  public function add()
+{
+    $data = json_decode($_POST['data'], true);
+    extract($data);
 
-        $filePath = null;
-        if (!empty($_FILES['file']['name'][0]) && $_FILES['file']['error'][0] === UPLOAD_ERR_OK) {
-            $uploadDir = __DIR__ . "/uploads/";
-            if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+    $filePath = null;
+    if (!empty($_FILES['file']['name'][0]) && $_FILES['file']['error'][0] === UPLOAD_ERR_OK) {
+        $uploadDir = __DIR__ . "/uploads/";
+        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 
-            $fileName = time() . "_" . basename($_FILES['file']['name'][0]);
-            $filePath = "uploads/" . $fileName;
+        $fileName = time() . "_" . basename($_FILES['file']['name'][0]);
+        $filePath = "uploads/" . $fileName;
 
-            move_uploaded_file($_FILES['file']['tmp_name'][0], $uploadDir . $fileName);
-        }
-
-        if (empty($employee_id)) $this->send(["message" => "Employee ID is required"], 400);
-        if (empty($first_name)) $this->send(["message" => "First name is required"], 400);
-        if (empty($last_name)) $this->send(["message" => "Last name is required"], 400);
-
-        $team_id = $this->addRecords(
-            "ioi_team_members",
-            ["employee_id", "first_name", "last_name", "position", "quote", "role_id", "is_mancomm", "file"],
-            [
-                $employee_id,
-                $first_name,
-                $last_name,
-                $position ?? "",
-                $quote ?? "",
-                $role_id,
-                $is_mancomm,
-                $filePath ?? "" 
-            ]
-        );
-
-        if (!$team_id) {
-            var_dump($this->db->errorInfo());
-            die("Insert failed!");
-        }
-
-        return $this->send([
-            "message" => "Team member created successfully",
-            "id" => $team_id
-        ]);
+        move_uploaded_file($_FILES['file']['tmp_name'][0], $uploadDir . $fileName);
     }
+
+    if (empty($project_name)) $this->send(["message" => "Project name is required"], 400);
+    if (empty($project_type)) $this->send(["message" => "Project type is required"], 400);
+    if (empty($project_category)) $this->send(["message" => "Project category is required"], 400);
+
+    $project_id = $this->addRecords(
+        "ioi_projects",
+        [
+            "project_name",
+            "project_type",
+            "start_date",
+            "end_date",
+            "project_category",
+            "company_description",
+            "brand_positioning",
+            "file"
+        ],
+        [
+            $project_name,
+            $project_type,
+            $start_date,
+            $end_date ?? null,
+            $project_category,
+            $company_description ?? "",
+            $brand_positioning ?? "",
+            $filePath ?? ""
+        ]
+    );
+
+    if (!$project_id) {
+        var_dump($this->db->errorInfo());
+        die("Insert failed!");
+    }
+
+    return $this->send([
+        "message" => "Project created successfully",
+        "id" => $project_id
+    ]);
+}
 }
