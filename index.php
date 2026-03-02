@@ -17,8 +17,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require __DIR__ . '/controller/teamcontroller.php';
 require __DIR__ . '/controller/rolescontroller.php';
 require __DIR__ . '/controller/clientcontroller.php';
+
+
 require __DIR__ . '/controller/projectcontroller.php';
 require __DIR__ . '/controller/projectpointscontroller.php';
+require __DIR__ . '/controller/projectgallerycontroller.php';
 
 require __DIR__ . '/controller/careercontroller.php';
 require __DIR__ . '/controller/bannercontroller.php';
@@ -30,6 +33,7 @@ $routes = [
 
     "projects" => new ProjectController(),
     "points" => new ProjectPointsController(),
+    "gallery" => new ProjectGalleryController(),
 
     "careers" => new CareerController(),
     "banners" => new BannerController(),

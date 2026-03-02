@@ -40,18 +40,15 @@ class ProjectController extends Controller {
         $data = json_decode($_POST['data'], true);
         extract($data);
 
-        $filePath = null;
-        if(!empty($_FILES['file']['name']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
-            $uploadDir = __DIR__ . "/uploads/";
-            if(!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+          $filePath = null;
+            if (!empty($_FILES['file']['name'][0]) && $_FILES['file']['error'][0] === UPLOAD_ERR_OK) {
+                $uploadDir = __DIR__ . "/uploads/";
+                if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 
-
-            $fileName = time() . "_" . basename($_FILES['file']['name']);
-            $filePath = "uploads/" . $fileName;
-
-            move_uploaded_file($_FILES['file']['tmp_name'], $uploadDir . $fileName);
-        
-        }
+                $fileName = time() . "_" . basename($_FILES['file']['name'][0]);
+                $filePath = "uploads/" . $fileName;
+                move_uploaded_file($_FILES['file']['tmp_name'][0], $uploadDir . $fileName);
+            }
 
 
         $project_id = $this->addRecords (

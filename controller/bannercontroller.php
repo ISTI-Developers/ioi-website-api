@@ -39,7 +39,6 @@ class BannerController extends Controller {
     if(empty($year)) $this->send(["message" => "Year is required"], 400);
     if(empty($text)) $this->send(["message" => "Text is required"], 400);
 
-    // handle file directly from $_FILES
     $filePath = null;
     if (!empty($_FILES['file']['name'][0]) && $_FILES['file']['error'][0] === UPLOAD_ERR_OK) {
         $uploadDir = __DIR__ . "/uploads/";
