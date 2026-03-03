@@ -1,8 +1,9 @@
 <?php
 
-require_once 'controller.php';
+require_once 'baseimagecontroller.php';
 
-class BannerController extends Controller {
+class BannerController extends BaseImageController {
+
     public function get() 
     {
         $data = $this->getRecords(
@@ -16,54 +17,51 @@ class BannerController extends Controller {
         $this->send($data);
     }
 
-    public function getOne($id) 
+    public function getOne()
     {
-        if(!$id) $this->send(["message" => "Banner ID is required"], 400);
+        if(!isset($_GET['id']) || $_GET['id'] === '') {
+            $this->send(["message" => "Banner ID is required"], 400);
+        }
 
         $data = $this->getRecords(
             "ioi_banners",
             ["banner_id"],
-            [$id],
+            [$_GET['id']],
             "one"
         );
+
+        if(!$data) {
+            $this->send(["message" => "Banner not found"], 404);
+        }
 
         $this->send($data);
     }
 
     public function add()
-{
-    $data = json_decode($_POST['data'], true);
-    extract($data);
+    {
+        $input = $this->getJsonInput();
 
-    if(empty($section)) $this->send(["message" => "Section is required"], 400);
-    if(empty($year)) $this->send(["message" => "Year is required"], 400);
-    if(empty($text)) $this->send(["message" => "Text is required"], 400);
+        $this->validateRequired($input, [
+            "section",
+            "year",
+            "text",
+            "file" 
+        ]);
 
-    $filePath = null;
-    if (!empty($_FILES['file']['name'][0]) && $_FILES['file']['error'][0] === UPLOAD_ERR_OK) {
-        $uploadDir = __DIR__ . "/uploads/";
-        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+        $banner_id = $this->addRecords(
+            "ioi_banners",
+            ["section", "year", "text", "file"],
+            [
+                $input["section"],
+                $input["year"],
+                $input["text"],
+                $input["file"]
+            ]
+        );
 
-        $fileName = time() . "_" . basename($_FILES['file']['name'][0]);
-        $filePath = "uploads/" . $fileName;
-        move_uploaded_file($_FILES['file']['tmp_name'][0], $uploadDir . $fileName);
+        $this->send([
+            "message" => "Banner created successfully",
+            "banner_id" => $banner_id
+        ], 201);
     }
-
-    $banner_id = $this->addRecords(
-        "ioi_banners",
-        ["section", "year", "text", "file"],
-        [
-            $section,
-            $year,
-            $text,
-            $filePath ?? null,
-        ]
-    );
-
-    if(!$banner_id) {
-        $this->send(["message" => "Failed to create banner"], 500);
-    }
-
-    $this->send(["message" => "Banner created successfully", "banner_id" => $banner_id], 201);
-}
 }

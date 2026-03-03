@@ -58,41 +58,23 @@ switch ($_SERVER['REQUEST_METHOD']) {
         }
         break;
 
-    case "POST":
-        if (!isset($_REQUEST['data'])) {
-            $controller->send(["message" => "Data not found."], 404);
-        }
-        $data = json_decode($_REQUEST['data'], associative: true);
-
-        if (isset($_FILES)) {
-            $files = $_FILES['file'] ?? null;
-            $filenames = [];
-
-            if ($files && is_array($files['name'])) {
-                $uploadDir = "uploads/";
-                if (!is_dir($uploadDir)) {
-                    mkdir($uploadDir, 0777, true);
-                }
-
-                foreach ($files['name'] as $index => $name) {
-                    if ($files['error'][$index] === UPLOAD_ERR_OK) {
-                        $fileName = time() . '_' . basename($name);
-                        $filePath = "uploads/" . $fileName;
-                        move_uploaded_file($files['tmp_name'][$index], __DIR__ . "/uploads/" . $fileName);
-                        $filenames[] = $filePath;
-                    }
-                }
-                $data["file"] = $filenames;
+        case "POST":
+            // Read JSON input from request body
+            $data = json_decode(file_get_contents("php://input"), true);
+        
+            if (!$data) {
+                $controller->send(["message" => "Data not found."], 400);
             }
-        }
-
-        $response = $controller->add($data);
-        if ($response)
-            $controller->send([
-                "message" => "Added successfully.",
-                "id" => $response
-            ]);
-        break;
+        
+            // Pass data to controller
+            $response = $controller->add($data);
+            if ($response) {
+                $controller->send([
+                    "message" => "Added successfully.",
+                    "id" => $response
+                ]);
+            }
+            break;
 
     case "PUT":
         $data = json_decode(file_get_contents("php://input"), true);
