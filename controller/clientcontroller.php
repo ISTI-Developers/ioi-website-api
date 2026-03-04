@@ -1,10 +1,9 @@
 <?php
 
+require_once 'baseimagecontroller.php';
 
-require_once 'controller.php';
 
-
-class ClientController extends Controller {
+class ClientController extends BaseImageController {
 
     public function get() 
     {
@@ -23,12 +22,20 @@ class ClientController extends Controller {
 
     public function getOne() 
     {
+        if(!isset($_GET['id']) || $_GET['id'] === '') {
+            $this->send(["message" => "Client ID is required"], 400);
+        }
+
         $data = $this->getRecords(
             "ioi_clients",
             ["client_id"],
-            [$id],
+            [$_GET[$id]],
             "one"
         );
+
+        if(!$data) {
+            $this->send(["message" => "Client not found"], 404);
+        }
 
         $this->send($data);
     }
@@ -37,44 +44,41 @@ class ClientController extends Controller {
 
     public function add()
     {
-        $data = json_decode($_POST['data'], true);
-        extract($data);
-
-        $filePath = null;
-        if(!empty($_FILES['file']['name'][0]) && $_FILES['file']['error'][0] === UPLOAD_ERR_OK) {
-        $uploadDir = __DIR__ . "/uploads/";
-        if(!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
-
-        $fileName = time() . "_" . basename($_FILES['file']['name'][0]);
-        $filePath = "uploads/" . $fileName;
-
-
-        move_uploaded_file($_FILES['file']['tmp_name'][0], $uploadDir . $fileName);
-        }
-
-        if(empty($client_name)) $this->send(["message" => "Client Name is required"], 400);
-        if(empty($client_description)) $this->send(["message" => "Client Description is required"], 400);
-
+        $input = $this->getJsonInput();
+        $this->validateRequired($input, [
+            "client_name",
+            "client_description",
+            "file"
+        ]);
 
         $client_id = $this->addRecords(
             "ioi_clients",
             ["client_name", "client_description", "file"],
             [
-                $client_name,
-                $client_description,
-                $filePath ?? ""
+                $input["client_name"],
+                $input["client_description"],
+                $input["file"]
             ]
         );
 
-        if(!$client_id) {
-            var_dump($this->db->errorInfo());
-            die("Insert failed");
-        }
-
-        return $this->send([
+        $this->send([
             "message" => "Client created successfully",
             "id" => $client_id
-        ]);
+        ], 201);
+    }
+
+    public function update()
+    {
+        $this->handleUpdate(
+            "ioi_clients",
+            "client_id",
+            ["client_name", "client_description", "file"]
+        );
+    }
+
+public function delete()
+    {
+        $this->handleDelete("ioi_clients", "client_id");
     }
 
 }

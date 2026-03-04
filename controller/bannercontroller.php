@@ -64,4 +64,17 @@ class BannerController extends BaseImageController {
             "banner_id" => $banner_id
         ], 201);
     }
+    public function update()
+    {
+        $this->handleUpdate(
+            "ioi_banners",
+            "banner_id",
+            ["section", "year", "text", "file"]
+        );
+    }
+
+    public function delete()
+    {
+        $this->handleDelete("ioi_banners", "banner_id");
+    }
 }

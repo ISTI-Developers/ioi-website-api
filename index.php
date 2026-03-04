@@ -58,26 +58,26 @@ switch ($_SERVER['REQUEST_METHOD']) {
         }
         break;
 
-        case "POST":
-            // Read JSON input from request body
-            $data = json_decode(file_get_contents("php://input"), true);
-        
-            if (!$data) {
-                $controller->send(["message" => "Data not found."], 400);
-            }
-        
-            // Pass data to controller
-            $response = $controller->add($data);
-            if ($response) {
-                $controller->send([
-                    "message" => "Added successfully.",
-                    "id" => $response
-                ]);
-            }
-            break;
+    case "POST":
+        $data = json_decode(file_get_contents("php://input"), true);
+        if (!$data) {
+            $controller->send(["message" => "Data not found."], 400);
+        }
+        $response = $controller->add($data);
+        if ($response) {
+            $controller->send([
+                "message" => "Added successfully.",
+                "id" => $response
+            ]);
+        }
+        break;
 
     case "PUT":
         $data = json_decode(file_get_contents("php://input"), true);
         $controller->update($data);
+        break;
+
+    case "DELETE": 
+        $controller->delete();
         break;
 }
