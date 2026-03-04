@@ -1,9 +1,9 @@
 <?php
 
-require_once 'controller.php';
+require_once 'baseimagecontroller.php';
 
 
-class ProjectController extends Controller {
+class ProjectController extends BaseImageController {
 
     public function get() 
     {
@@ -37,46 +37,39 @@ class ProjectController extends Controller {
 
     public function add()
     {
-        $data = json_decode($_POST['data'], true);
-        extract($data);
+        $data = $this->getJsonInput();
 
-          $filePath = null;
-            if (!empty($_FILES['file']['name'][0]) && $_FILES['file']['error'][0] === UPLOAD_ERR_OK) {
-                $uploadDir = __DIR__ . "/uploads/";
-                if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
-
-                $fileName = time() . "_" . basename($_FILES['file']['name'][0]);
-                $filePath = "uploads/" . $fileName;
-                move_uploaded_file($_FILES['file']['tmp_name'][0], $uploadDir . $fileName);
-            }
-
+        $this->validateRequired($data, [
+            "project_name",
+            "project_type",
+            "start_date",
+            "project_category",
+            "company_description",
+            "brand_positioning",
+            "file"
+        ]);
 
         $project_id = $this->addRecords (
             "ioi_projects",
             ["project_name", "project_type", "start_date", "end_date", "project_category", "company_description", "brand_positioning", "file"],
             [
-                $project_name,
-                $project_type,
-                $start_date,
-                $end_date ?? null,
-                $project_category,
-                $company_description,
-                $brand_positioning,
-                $filePath ?? ""
+                $data["project_name"],
+                 $data["project_type"],
+                 $data["start_date"],
+                 $data["end_date"],
+                 $data["project_category"],
+                 $data["company_description"],
+                 $data["brand_positioning"],
+                 $data["file"]
             ]
 
 
         );
 
-        if(!$project_id) {
-            var_dump($this->db->errorInfo());
-            die("Insert failed!");
-        }
-
-        return $this->send([
+        $this->send([
             "message" => "Project Detail created successfully",
             "id" => $project_id
-        ]);
+        ], 201);
     }
 }
 
