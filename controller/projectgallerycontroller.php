@@ -1,9 +1,9 @@
 <?php
 
-require_once 'controller.php';
+require_once 'baseimagecontroller.php';
 
 
-class ProjectGalleryController extends Controller {
+class ProjectGalleryController extends BaseImageController {
 
     public function get()
     {
@@ -34,50 +34,33 @@ class ProjectGalleryController extends Controller {
         $this->send($project);
     }
         
-    public function add()
+  public function add()
     {
-        $data = json_decode($_POST['data'], true);
-        extract($data);
+        $data = $this->getJsonInput();
 
-        $filePath = null;
-        $uploadDir = __DIR__ . "/uploads/";
-        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
-
-        if (is_array($_FILES['file']['name'])) {
-            if (!empty($_FILES['file']['name'][0]) && $_FILES['file']['error'][0] === UPLOAD_ERR_OK) {
-                $fileName = time() . "_" . basename($_FILES['file']['name'][0]);
-                $filePath = "uploads/" . $fileName;
-                move_uploaded_file($_FILES['file']['tmp_name'][0], $uploadDir . $fileName);
-            }
-        } else {
-            if (!empty($_FILES['file']['name']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
-                $fileName = time() . "_" . basename($_FILES['file']['name']);
-                $filePath = "uploads/" . $fileName;
-                move_uploaded_file($_FILES['file']['tmp_name'], $uploadDir . $fileName);
-            }
-        }
+        $this->validateRequired($data, [
+            "project_id",
+            "layout_group",
+            "columns",
+            "display_order",
+            "file"
+        ]);
 
         $gallery_id = $this->addRecords(
             "ioi_projects_gallery",
-            ["project_id", "layout_group", "columns", "display_order", "file"],
+            [ "project_id",   "layout_group",   "columns", "display_order", "file"],
             [
-                $project_id,
-                $layout_group,
-                $columns,
-                $display_order,
-                $filePath ?? ""
+                $data["project_id"],
+                $data["layout_group"],
+                $data["columns"],
+                $data["display_order"],
+                $data["file"]            
             ]
         );
 
-        if (!$gallery_id) {
-            $this->send(["error" => "Insert failed"], 500);
-            return;
-        }
-
         $this->send([
-            "message" => "Successfully added gallery images",
-            "gallery_id" => $gallery_id
-        ]);
+            "message" => "Images for gallery created successfully",
+            "id" => $gallery_id
+        ], 201);
     }
-
-}
+    }
