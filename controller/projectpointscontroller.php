@@ -1,10 +1,10 @@
 <?php
 
 
-require_once 'controller.php';
+require_once 'baseimagecontroller.php';
 
 
-class ProjectPointsController extends controller {
+class ProjectPointsController extends BaseImageController {
 
     public function get()
     {
@@ -38,19 +38,23 @@ class ProjectPointsController extends controller {
 
     public function add()
     {
-          $data = json_decode($_POST['data'], true);
-        extract($data);
 
-
-        if(empty($project_id) || empty($type) || empty($content)){
-            $this->send(["error" => "Missing required fields"], 404);
-            return;
-        }
+        $data = $this->getJsonInput();
+        
+        $this->validateRequired($data, [
+            "project_id",
+            "type",
+            "content"
+        ]);
 
         $point_id = $this->addRecords (
             "ioi_projects_points",
             ["project_id", "type", "content"],
-            [$project_id, $type, $content]
+            [
+                $data["project_id"],
+                $data["type"],
+                $data["content"],
+            ]
         );
 
         if(!$point_id) {

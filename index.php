@@ -59,9 +59,6 @@ switch ($_SERVER['REQUEST_METHOD']) {
         break;
 
     case "POST":
-
-
-
       $hasFiles = !empty($_FILES['file']['name'][0]) || !empty($_FILES['file']['name'][0]) || !empty($_FILES['file']['name']);
 
         if ($hasFiles) {
@@ -75,6 +72,8 @@ switch ($_SERVER['REQUEST_METHOD']) {
             $controller->send(["message" => "Data not found."], 400);
             exit;
         }
+
+        
         $response = $controller->add($data);
         if ($response) {
             $controller->send([
