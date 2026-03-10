@@ -28,8 +28,11 @@ class ProjectController extends BaseImageController {
         }
 
         $points = $this->getRecords("ioi_projects_points", ["project_id"], [$id], "many");
+        $prose = $this->getRecords("ioi_projects_prose", ["project_id"], [$id], "many"); // add this
 
         $project->points = $points;
+        $project->prose = $prose; 
+    
 
         $this->send($project);
     }   
@@ -44,8 +47,6 @@ class ProjectController extends BaseImageController {
             "project_type",
             "start_date",
             "project_category",
-            "company_description",
-            "brand_positioning",
             "file"
         ]);
 

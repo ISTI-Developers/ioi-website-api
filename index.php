@@ -20,8 +20,9 @@ require __DIR__ . '/controller/clientcontroller.php';
 
 
 require __DIR__ . '/controller/projectcontroller.php';
-require __DIR__ . '/controller/projectpointscontroller.php';
-require __DIR__ . '/controller/projectgallerycontroller.php';
+require __DIR__ . '/controller/project_pointscontroller.php';
+require __DIR__ . '/controller/project_gallerycontroller.php';
+require __DIR__ . '/controller/project_prosecontroller.php';
 
 require __DIR__ . '/controller/careercontroller.php';
 require __DIR__ . '/controller/bannercontroller.php';
@@ -34,6 +35,7 @@ $routes = [
     "projects" => new ProjectController(),
     "points" => new ProjectPointsController(),
     "gallery" => new ProjectGalleryController(),
+    "prose" => new ProjectProseController(),
 
     "careers" => new CareerController(),
     "banners" => new BannerController(),
