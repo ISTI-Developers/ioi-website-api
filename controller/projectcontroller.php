@@ -28,8 +28,7 @@ class ProjectController extends BaseImageController {
         }
 
         $points = $this->getRecords("ioi_projects_points", ["project_id"], [$id], "many");
-        $prose = $this->getRecords("ioi_projects_prose", ["project_id"], [$id], "many"); // add this
-
+        $prose = $this->getRecords("ioi_projects_prose", ["project_id"], [$id], "many"); 
         $project->points = $points;
         $project->prose = $prose; 
     
@@ -42,6 +41,7 @@ class ProjectController extends BaseImageController {
     {
         $data = $this->getJsonInput();
 
+        
         $this->validateRequired($data, [
             "project_name",
             "project_type",
@@ -50,25 +50,39 @@ class ProjectController extends BaseImageController {
             "file"
         ]);
 
-        $project_id = $this->addRecords (
+
+        $start_date = date("Y-m-d", strtotime($data["start_date"]));
+        $end_date = isset($data["end_date"]) && !empty($data["end_date"])
+            ? date("Y-m-d", strtotime($data["end_date"]))
+            : null; 
+
+        $project_id = $this->addRecords(
             "ioi_projects",
-            ["project_name", "project_type", "start_date", "end_date", "project_category", "company_description", "brand_positioning", "file"],
+            [
+                "project_name",
+                "project_type",
+                "start_date",
+                "end_date",
+                "project_category",
+                "company_description",
+                "brand_positioning",
+                "file"
+            ],
             [
                 $data["project_name"],
-                 $data["project_type"],
-                 $data["start_date"],
-                 $data["end_date"],
-                 $data["project_category"],
-                 $data["company_description"],
-                 $data["brand_positioning"],
-                 $data["file"]
+                $data["project_type"],
+                $start_date,
+                $end_date,
+                $data["project_category"],
+                $company_description,
+                $brand_positioning,
+                $data["file"]
             ]
-
-
         );
 
+        
         $this->send([
-            "message" => "Project Detail created successfully",
+            "message" => "Project created successfully",
             "id" => $project_id
         ], 201);
     }
