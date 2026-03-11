@@ -42,17 +42,19 @@ class ProjectGalleryController extends BaseImageController {
             "project_id",
             "layout_group",
             "columns",
+            "column_ratio",
             "display_order",
             "file"
         ]);
 
         $gallery_id = $this->addRecords(
             "ioi_projects_gallery",
-            [ "project_id",   "layout_group",   "columns", "display_order", "file"],
+            [ "project_id",   "layout_group",   "columns", "column_ratio", "display_order", "file"],
             [
                 $data["project_id"],
                 $data["layout_group"],
                 $data["columns"],
+                $data["column_ratio"],
                 $data["display_order"],
                 $data["file"]            
             ]
