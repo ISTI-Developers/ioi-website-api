@@ -33,5 +33,35 @@ class ProjectVideoController extends BaseImageController {
     }
 
 
-  
+    public function add()
+    {
+        $data = $this->getJsonInput();
+
+        $this->validateRequired($data, [
+            "project_id",
+            "file"
+        ]);
+
+
+        $video_id = $this->addRecords(
+            "ioi_projects_video",
+            ["project_id", "file"],
+            [
+                $data["project_id"],
+                $data["file"]
+            ]
+
+        );
+
+        if(!$video_id) {
+            $this->send(["error" => "Insert failed"], 500);
+            return;
+        }
+
+        $this->send([
+            "message" => "Video added successfully",
+            "video_id" => $video_id
+        ]);
+
+    }
 }
