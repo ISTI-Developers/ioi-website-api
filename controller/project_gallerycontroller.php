@@ -8,7 +8,7 @@ class ProjectGalleryController extends BaseImageController {
     public function get()
     {
         $data = $this->getRecords (
-         "ioi_projects_galley",
+         "ioi_projects_gallery",
          [],
          [],
          "*",
