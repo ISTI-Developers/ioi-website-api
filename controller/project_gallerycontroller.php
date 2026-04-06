@@ -40,29 +40,29 @@ class ProjectGalleryController extends BaseImageController {
 
         $this->validateRequired($data, [
             "project_id",
-            "layout_group",
-            "columns",
-            "column_ratio",
-            "display_order",
-            "file"
+            "file",
         ]);
+
+        $result = $this->execute(
+            "SELECT COALESCE(MAX(position), 0) + 1 AS next_position FROM ioi_projects_gallery WHERE project_id = ?",
+            [$data["project_id"]]
+        );
+
+        $position = $result[0]->next_position;
 
         $gallery_id = $this->addRecords(
             "ioi_projects_gallery",
-            [ "project_id",   "layout_group",   "columns", "column_ratio", "display_order", "file"],
+            [ "project_id",   "file",  "position"],
             [
                 $data["project_id"],
-                $data["layout_group"],
-                $data["columns"],
-                $data["column_ratio"],
-                $data["display_order"],
-                $data["file"]            
+                $data["file"],
+                $position   
             ]
         );
 
         $this->send([
             "message" => "Images for gallery created successfully",
-            "id" => $gallery_id
+            "gallery_id" => $gallery_id
         ], 201);
     }
     }
