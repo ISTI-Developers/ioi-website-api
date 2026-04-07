@@ -44,11 +44,19 @@ class ProjectGalleryController extends BaseImageController {
         ]);
 
         $result = $this->execute(
-            "SELECT COALESCE(MAX(position), 0) + 1 AS next_position FROM ioi_projects_gallery WHERE project_id = ?",
+            "SELECT position FROM ioi_Projects_gallery WHERE project_id = ? ORDER BY position ASC",
             [$data["project_id"]]
         );
 
-        $position = $result[0]->next_position;
+        $positions = array_column($result, "position");
+        $position = 1;
+
+        foreach($positions as $pos) {
+            if($pos >= $position) {
+                $position = $pos + 1;
+            }
+            else break;
+        }
 
         $gallery_id = $this->addRecords(
             "ioi_projects_gallery",
