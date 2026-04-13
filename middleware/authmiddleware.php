@@ -6,14 +6,15 @@ require_once __DIR__ . '/../helper/JWT.php';
 function authenticate() {
 
     $headers = getallheaders();
+    $jwtHeader = $headers['Authorization'] ?? '';
 
-    if(!isset($headers['Authorization'])) {
+    if(!isset($jwtHeader)) {
         http_response_code(401);
         echo json_encode(['error' => 'No token provided']);
         exit;
     }
 
-    $token = str_replace('Bearer ', '', $headers['Authorization']);
+    $token = str_replace('Bearer ', '', $jwtHeader);
 
     $jwt     = new JWT();
     $payload = $jwt->getPayload($token);

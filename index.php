@@ -1,8 +1,8 @@
 <?php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+ini_set('display_errors', 0);       
+ini_set('display_startup_errors', 0); 
+error_reporting(0);    
 
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
@@ -13,6 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
+
+
+require __DIR__ . '/controller/authController.php';
 
 require __DIR__ . '/controller/teamcontroller.php';
 require __DIR__ . '/controller/rolescontroller.php';
@@ -30,6 +33,8 @@ require __DIR__ . '/controller/careercontroller.php';
 require __DIR__ . '/controller/bannercontroller.php';
 
 $routes = [
+    "auth" => new AuthController(),
+
     "team" => new TeamController(),
     "roles" => new RolesController(),
     "clients" => new ClientController(),

@@ -6,39 +6,80 @@ require_once __DIR__ . '/../helper/jwt.php';
 class AuthController extends Controller {
 
     public function add($data) {
-        $username = $data['username'] ?? '';    
-        $password = $data['password'] ?? '';
+        
+    $username = $data['username'] ?? '';    
+    $password = $data['password'] ?? '';
 
-        if(!$username || !$password) {
-            $this->send(['error' => 'Username and password are required', 422]);
-        }
-
-        $admin = $this->getRecords(
-            'ioi_users',
-            ['username'],
-            [$username],
-            'one'
-        );
-
-        if(!$admin || !password_verify($password, $admin->password)) {
-            $this->send(['error' => 'Invalid credentials', 401]);
-        }
-
-        $jwt   = new JWT();
-        $token = $jwt->generate($admin->user_id, $admin->username);
-
-
-        $this->send([
-            'token' => $token,
-            'admin' => [
-                'id' => $admin->user_id,
-                'username' => $admin->username,
-                'role'     => 'admin'
-            ]
-        ]);
+    if(!$username || !$password) {
+        $this->send(['error' => 'Username and password are required'], 422);
+        return;
     }
 
-    public function get()        { $this->send(['error' => 'Not allowed'], 405); }
+    $admin = $this->getRecords(
+        'ioi_users',
+        ['username'],
+        [$username],
+        'one'
+    );
+
+    $adminPassword = is_array($admin) ? $admin['password'] : $admin->password;
+    $adminId       = is_array($admin) ? $admin['user_id'] : $admin->user_id;
+    $adminUsername = is_array($admin) ? $admin['username'] : $admin->username;
+
+    if(!$admin || !password_verify($password, $adminPassword)) {
+        $this->send(['error' => 'Invalid credentials'], 401);
+        return;
+    }
+
+    $jwt   = new JWT();
+    $token = $jwt->generate($adminId, $adminUsername);
+
+    $this->send([
+        'accessToken' => $token,
+        'user' => [
+            'user_id'  => $adminId,
+            'username' => $adminUsername,
+            'role'     => 'admin'
+        ]
+    ]);
+    }   
+
+    public function get() {
+        $headers = getallheaders();
+        $jwtHeader = $headers['Authorization'] ?? '';
+
+        $token = str_replace('Bearer ', '', $jwtHeader);
+
+        $jwt = new JWT();
+        $payload = $jwt->getPayload($token);
+
+        if(!$payload) {
+        return $this->send([
+            'error' => 'Invalid or expired token'
+        ], 401);
+        }
+    
+
+        $admin = [
+            'user_id' => $payload->user_id,
+            'username' => $payload->username,
+            'role' => 'admin'
+        ];
+
+       $this->send([
+        'accessToken' => $token,
+        'user' => [
+            'user_id'  => $payload['id'],    
+            'username' => $payload['u'],   
+            'role'     => $payload['role'],  
+        ]
+    ]);
+    }
+
+   
+
+
+
     public function getOne($id)  { $this->send(['error' => 'Not allowed'], 405); }
     public function edit($data)  { $this->send(['error' => 'Not allowed'], 405); }
     public function delete($id)  { $this->send(['error' => 'Not allowed'], 405); }
