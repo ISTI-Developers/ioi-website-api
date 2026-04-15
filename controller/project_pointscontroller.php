@@ -1,10 +1,10 @@
 <?php
 
 
-require_once 'baseimagecontroller.php';
+require_once 'basecontroller.php';
 
 
-class ProjectPointsController extends BaseImageController {
+class ProjectPointsController extends BaseController {
 
     public function get()
     {
@@ -66,6 +66,15 @@ class ProjectPointsController extends BaseImageController {
             "message" => "Successfully added project point",
             "point_id" => $point_id
         ]);
+    }
+
+    public function update()
+    {
+        $this->handleUpdate(
+            "ioi_projects_points",
+            "point_id",
+            ["project_id", "content"]
+        );
     }
 
 }
