@@ -1,9 +1,9 @@
 <?php
 
 
-require_once 'baseimagecontroller.php';
+require_once 'basecontroller.php';
 
-class ProjectProseController extends BaseImageController {
+class ProjectProseController extends BaseController {
 
     public function get() 
     {

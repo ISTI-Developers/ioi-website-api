@@ -75,7 +75,7 @@ class Controller
             : [];
     }
 
-    public function addRecords($table, $columns, $values) // ← removed default values
+    public function addRecords($table, $columns, $values) 
     {
         $col = "(" . implode(",", $columns) . ")";
         $placeholders = "(" . implode(",", array_fill(0, count($columns), "?")) . ")";
@@ -83,7 +83,7 @@ class Controller
         return $this->execute($query, $values, 'POST');
     }
 
-    public function updateRecords($table, $columns, $values, $conditionColumn, $conditionValue) // ← removed default values
+    public function updateRecords($table, $columns, $values, $conditionColumn, $conditionValue) 
     {
         $setParts = implode(", ", array_map(fn($col) => "{$col} = ?", $columns));
         $query = "UPDATE {$table} SET {$setParts} WHERE {$conditionColumn} = ?";

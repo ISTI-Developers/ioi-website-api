@@ -1,9 +1,9 @@
 <?php
 
-require_once 'baseimagecontroller.php';
+require_once 'basecontroller.php';
 
 
-class ProjectVideoController extends BaseImageController {
+class ProjectVideoController extends BaseController {
     public function get()
     {
         $data = $this->getRecords(

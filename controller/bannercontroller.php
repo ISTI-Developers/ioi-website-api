@@ -1,8 +1,8 @@
 <?php
 
-require_once 'baseimagecontroller.php';
+require_once 'basecontroller.php';
 
-class BannerController extends BaseImageController {
+class BannerController extends BaseController {
 
     public function get() 
     {

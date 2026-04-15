@@ -1,8 +1,8 @@
 <?php
 
-require_once 'baseimagecontroller.php';
+require_once 'basecontroller.php';
 
-class TeamController extends BaseImageController
+class TeamController extends BaseController
 {
     public function get()
     {
