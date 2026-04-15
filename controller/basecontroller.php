@@ -2,7 +2,7 @@
 
 require_once 'controller.php';
 
-class BaseImageController extends Controller {
+class BaseController extends Controller {
 
     protected function getJsonInput()
     {
@@ -36,6 +36,8 @@ class BaseImageController extends Controller {
 
         return [$updateFields, $updateValues];
     }
+
+    
     protected function handleUpdate($table, $idColumn, $allowedFields)
     {
         if(!isset($_GET['id']) || $_GET['id'] === '') {
