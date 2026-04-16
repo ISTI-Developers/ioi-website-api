@@ -74,8 +74,8 @@ class ProjectController extends BaseController {
                 $start_date,
                 $end_date,
                 $data["project_category"],
-                $company_description,
-                $brand_positioning,
+                $data["company_description"],
+                $data["brand_positioning"],
                 $data["file"]
             ]
         );
@@ -85,6 +85,17 @@ class ProjectController extends BaseController {
             "message" => "Project created successfully",
             "id" => $project_id
         ], 201);
+    }
+
+
+    public function update() 
+    {
+        $this->handleUpdate(
+            "ioi_projects",
+            "project_id",
+            ["project_name", "project_type", "start_date", "end_date", "project_category", "company_description", "brand_positioning", "file"]
+        );
+
     }
 }
 
