@@ -34,9 +34,9 @@ class ProjectProseController extends BaseController {
     $this->send($project);
 }
 
-    public function add()
+    public function add($data = null)
     {
-        $data = $this->getJsonInput(); 
+        $data = $data ?? $this->getJsonInput();
         extract($data);
 
         if (empty($project_id)) $this->send(["message" => "Project ID is required"], 400);
@@ -56,5 +56,14 @@ class ProjectProseController extends BaseController {
         ]);
     }
 
+    public function update($data = null)
+    {
+        $this->handleUpdate(
+            "ioi_projects_prose",
+            "prose_id",
+            ["project_id", "content"],
+            $data
+        );
+    }
 
     }
