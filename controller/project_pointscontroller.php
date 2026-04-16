@@ -36,10 +36,11 @@ class ProjectPointsController extends BaseController {
         $this->send($project);
     }   
 
-    public function add()
+    public function add($data = null)
     {
 
-        $data = $this->getJsonInput();
+        $data = $data ?? $this->getJsonInput();
+        extract($data);
         
         $this->validateRequired($data, [
             "project_id",
@@ -68,12 +69,13 @@ class ProjectPointsController extends BaseController {
         ]);
     }
 
-    public function update()
+    public function update($data = null)
     {
         $this->handleUpdate(
             "ioi_projects_points",
             "point_id",
-            ["project_id", "content"]
+            ["project_id", "content"],
+            $data
         );
     }
 
