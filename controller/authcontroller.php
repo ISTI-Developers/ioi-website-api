@@ -58,27 +58,16 @@ class AuthController extends Controller {
             'error' => 'Invalid or expired token'
         ], 401);
         }
-    
-
-        $admin = [
-            'user_id' => $payload->user_id,
-            'username' => $payload->username,
-            'role' => 'admin'
-        ];
 
        $this->send([
         'accessToken' => $token,
         'user' => [
-            'user_id'  => $payload['id'],    
-            'username' => $payload['u'],   
-            'role'     => $payload['role'],  
+            'user_id'  => $payload -> user_id,    
+            'username' => $payload -> username,   
+            'role'     => 'admin' 
         ]
     ]);
     }
-
-   
-
-
 
     public function getOne($id)  { $this->send(['error' => 'Not allowed'], 405); }
     public function edit($data)  { $this->send(['error' => 'Not allowed'], 405); }
