@@ -73,4 +73,15 @@ class ProjectGalleryController extends BaseController {
             "gallery_id" => $gallery_id
         ], 201);
     }
+  
+
+    public function update()
+    {
+        $this->handleUpdate(
+            "ioi_projects_gallery",
+            "gallery_id",
+            ["file", "position"],
+        );
     }
+
+}
