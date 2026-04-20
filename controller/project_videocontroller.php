@@ -64,4 +64,13 @@ class ProjectVideoController extends BaseController {
         ]);
 
     }
+
+    public function update()
+    {
+        $this->handleUpdate(
+        "ioi_projects_video",
+        "video_id",
+        ["file"]
+        );
+    }
 }
