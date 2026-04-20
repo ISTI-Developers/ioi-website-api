@@ -65,5 +65,10 @@ class ProjectProseController extends BaseController {
             $data
         );
     }
-
+    public function delete()
+    {
+        $this->handleDelete("ioi_projects_prose", "prose_id");
     }
+
+
+}
