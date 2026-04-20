@@ -79,4 +79,9 @@ class ProjectPointsController extends BaseController {
         );
     }
 
+    public function delete()
+    {
+        $this->handleDelete("ioi_projects_points", "point_id");
+    }
+
 }
