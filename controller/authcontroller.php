@@ -44,30 +44,32 @@ class AuthController extends Controller {
     ]);
     }   
 
-    public function get() {
-        $headers = getallheaders();
-        $jwtHeader = $headers['Authorization'] ?? '';
+   public function get() {
+    $headers = getallheaders();
+    $jwtHeader = $headers['Authorization'] ?? '';
+    $token = str_replace('Bearer ', '', $jwtHeader);
 
-        $token = str_replace('Bearer ', '', $jwtHeader);
+    $jwt = new JWT();
+    $payload = $jwt->getPayload($token);
 
-        $jwt = new JWT();
-        $payload = $jwt->getPayload($token);
+    if (!$payload) {
+        return $this->send(['error' => 'Invalid or expired token'], 401);
+    }
 
-        if(!$payload) {
-        return $this->send([
-            'error' => 'Invalid or expired token'
-        ], 401);
-        }
+   
+    $userId   = is_array($payload) ? $payload['id']   : $payload->id;
+    $username = is_array($payload) ? $payload['u']     : $payload->u;
+    $role     = is_array($payload) ? $payload['role']  : $payload->role;
 
-       $this->send([
+    $this->send([
         'accessToken' => $token,
         'user' => [
-            'user_id'  => $payload -> user_id,    
-            'username' => $payload -> username,   
-            'role'     => 'admin' 
+            'user_id'  => $userId,
+            'username' => $username,
+            'role'     => $role ?? 'admin'
         ]
     ]);
-    }
+}
 
     public function getOne($id)  { $this->send(['error' => 'Not allowed'], 405); }
     public function edit($data)  { $this->send(['error' => 'Not allowed'], 405); }
