@@ -73,4 +73,10 @@ class ProjectVideoController extends BaseController {
         ["file"]
         );
     }
+
+    public function delete()
+    {
+        $this->handleDelete("ioi_projects_video", "video_id");
+      
+    }
 }

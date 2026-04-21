@@ -84,4 +84,9 @@ class ProjectGalleryController extends BaseController {
         );
     }
 
+    public function delete()
+    {
+        $this->handleDelete("ioi_projects_gallery", "gallery_id");
+    }
+
 }
