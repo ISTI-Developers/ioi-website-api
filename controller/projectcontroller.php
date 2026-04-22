@@ -45,7 +45,6 @@ class ProjectController extends BaseController {
         $this->validateRequired($data, [
             "project_name",
             "project_type",
-            "start_date",
             "project_category",
         ]);
 
