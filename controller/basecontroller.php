@@ -55,13 +55,30 @@ class BaseController extends Controller {
         $this->send(["message" => "Updated successfully"]);
     }
 
-    protected function handleDelete($table, $idColumn)
+    protected function handleDelete($table, $idColumn, $mode = 'hard')
     {
-        if(!isset($_GET['id']) || $_GET['id'] === '') {
+        if (!isset($_GET['id']) || $_GET['id'] === '') {
             $this->send(["message" => "ID is required"], 400);
         }
 
-        $this->deleteRecords($table, $idColumn, $_GET['id']);
+        $id = $_GET['id'];
+
+        if ($mode === 'soft') {
+            $this->updateRecords(
+                $table,
+                ['is_deleted'],
+                [1],
+                $idColumn,
+                $id
+            );
+
+        } elseif ($mode === 'hard') {
+            $this->deleteRecords($table, $idColumn, $id);
+
+        } else {
+            $this->send(["message" => "Invalid delete mode"], 400);
+        }
+
         $this->send(["message" => "Deleted successfully"]);
     }
 }
