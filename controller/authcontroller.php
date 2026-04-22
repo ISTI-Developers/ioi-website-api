@@ -27,7 +27,7 @@ class AuthController extends Controller {
         }
 
         $stmt = $this->connection->prepare(
-            "SELECT user_id, username, password, role FROM ioi_users WHERE username = ?"
+            "SELECT user_id, username, password FROM ioi_users WHERE username = ?"
         );
 
         $stmt->execute([$username]);
@@ -42,14 +42,12 @@ class AuthController extends Controller {
 
         $_SESSION['user_id']  = $user->user_id;
         $_SESSION['username'] = $user->username;
-        $_SESSION['role']     = $user->role;
 
         respondSuccess([
             'message' => 'Logged in successfully.',
             'user' => [
                 'user_id'  => $user->user_id,
                 'username' => $user->username,
-                'role'     => $user->role,
             ]
         ]);
     }
@@ -69,7 +67,7 @@ class AuthController extends Controller {
         }
 
         $stmt = $this->connection->prepare(
-            "SELECT user_id, username, role, created_at FROM ioi_users WHERE user_id = ?"
+            "SELECT user_id, username, created_at FROM ioi_users WHERE user_id = ?"
         );
 
         $stmt->execute([$_SESSION['user_id']]);

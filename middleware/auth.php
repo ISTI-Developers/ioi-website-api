@@ -13,7 +13,7 @@ function requireAuth(): array {
 
     return [
         'user_id' => $_SESSION['id'],
-        'email' => $_SESSION['email'],
+        'username' => $_SESSION['username'],
         'name' => $_SESSION['name']
     ];
 }
