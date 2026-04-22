@@ -13,7 +13,7 @@ class ProjectController extends BaseController {
             [],
             "many",
             "*",
-            "ORDER BY project_id ASC"
+            "WHERE is_deleted = 0 ORDER BY project_Id ASC"
         );
         $this->send($data);
     }
@@ -47,7 +47,6 @@ class ProjectController extends BaseController {
             "project_type",
             "start_date",
             "project_category",
-            "file"
         ]);
 
 
@@ -96,6 +95,11 @@ class ProjectController extends BaseController {
             ["project_name", "project_type", "start_date", "end_date", "project_category", "company_description", "brand_positioning", "file"]
         );
 
+    }
+
+    public function delete()
+    {
+        $this->handleDelete("ioi_projects", "project_id", "soft");
     }
 }
 
