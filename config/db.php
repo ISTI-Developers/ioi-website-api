@@ -1,15 +1,15 @@
 <?php
-const DB_SERVER = '';
-const DB_USERNAME = '';
-const DB_PASSWORD = '';
-const DB_NAME = '';
+const DB_SERVER = 'localhost';
+const DB_USERNAME = 'superadmin';
+const DB_PASSWORD = 'superadmin_';
+const DB_NAME = 'inspire_ioi_website';
 
 const DEV_SERVER = 'localhost';
 const DEV_USERNAME = 'root';
 const DEV_PASSWORD = '';
-const DEV_NAME = 'ioi_website';
+const DEV_NAME = 'ioi';
 
-function getDbConfig($mode = "PROD")
+function getDbConfig($mode = "DEV")
 {
     if($mode === 'DEV') {
         return [

@@ -5,7 +5,7 @@ function setCorsHeaders(): void {
     $allowed_origins = [
         'http://localhost:5173', // vite dev server 
          'http://localhost:9917', // vite dev server
-        'https://domain.com', // production
+        'https://innovationone.com.ph', // production
     ];
 
     $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
